@@ -1,0 +1,15 @@
+analysis_spec:
+  - CRF: rawplus_dm
+    DataField: age_nsv
+    DataType: Numeric
+    Missing: Y
+    Outlier: true
+    Digit: Y
+    Variant: Y
+  - CRF: rawplus_dm
+    DataField: sex
+    DataType: Character
+    Missing: Y  
+    Outlier: false
+    Digit: null
+    Variant: null

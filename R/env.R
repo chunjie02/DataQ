@@ -5,7 +5,8 @@ required_packages <- function() {
     "visNetwork",
     "dplyr", 
     "ggplot2", 
-    "readr"
+    "readr",
+    "yaml"
   )
 }
 
