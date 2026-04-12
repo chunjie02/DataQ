@@ -1,0 +1,13 @@
+# R 专用 .gitignore
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+data/
+tmp/
+temp/
+r_libs/
+_targets/
+*.log
+*.tmp
