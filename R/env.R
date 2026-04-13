@@ -6,14 +6,20 @@ required_packages <- function() {
     "dplyr", 
     "ggplot2", 
     "readr",
-    "yaml"
+    "yaml",
+    "favawesome",
+    "rsvg",
+    "rmarkdown","stringi", "stringr", 
+    "gt",
+    "htmltools"
   )
 }
 
 activate_local_lib <- function(lib = file.path(getwd(), "r_libs")) {
   dir.create(lib, recursive = TRUE, showWarnings = FALSE)
   lib <- normalizePath(lib, winslash = "/", mustWork = TRUE)
-  .libPaths(unique(c(lib, .libPaths())))
+  #.libPaths(unique(c(lib, .libPaths())))
+  .libPaths(lib)
   invisible(lib)
 }
 

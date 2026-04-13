@@ -7,10 +7,10 @@ outlier <- function(ImportData) {
   # check non-empty ImportData
   if (is.null(ImportData) || length(ImportData) == 0 ) return(list())
 
+  # chech outlier:
+  Outlier <- list ()
   for (i in seq_along(ImportData)) {
-    Outlier <- list ()
-    j=1
- i=1
+
     if (toupper(trimws (ImportData[[i]]$Outlier )) %in% c("TRUE", "T", "Y", "1") ) {
       df <- ImportData[[i]]$Data
       var <- ImportData[[i]]$DataField
@@ -44,9 +44,8 @@ outlier <- function(ImportData) {
           output$z_df <- z_df 
           output$z_indicator <- nrow(z_df %>% dplyr::filter(z_outlier == TRUE)) [1] > 0
           
-          ## stack output
-          Outlier[[j]] <-output
-          j <- j + 1
+          ##  output
+          Outlier <- c(Outlier, list(output))
       } 
      }
   }

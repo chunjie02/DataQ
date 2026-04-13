@@ -1,0 +1,88 @@
+---
+title: "Data Quality Check Report"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+      
+params: 
+  Stat_Outlier: NA
+
+---
+  
+## Summary
+```{r , echo=FALSE, results='asis'}
+
+N <- length(Stat_Outlier)
+l_outlier <- Stat_Outlier[sapply(Stat_Outlier, function(x) x$iqr_indicator == TRUE)]
+n <- length(l_outlier)
+summary <- dplyr::tibble(
+    Params     = c("Number of variable have been checked", "Variable has outlier detected" ),
+    Value   = c(N, n)
+    ) 
+summary %>% gt::gt()  %>% gt::tab_options(
+      column_labels.hidden = TRUE
+    )
+
+```
+## Explore Outlier 
+
+<!-- ```{r , echo=FALSE, results='asis'} -->
+<!-- l_outlier <- Stat_Outlier[sapply(Stat_Outlier, function(x) x$iqr_indicator == TRUE)] -->
+
+<!-- for(i in seq_along(l_outlier)  ){ -->
+<!--   print(htmltools::h3(l_outlier[[i]]$DataField)) -->
+
+<!--   # boxplot -->
+<!--   df <- l_outlier[[i]]$iqr_df         -->
+<!--   field <- l_outlier[[i]]$DataField  -->
+
+<!--   plot <-boxplot( x = df[[3]],  main = "Outlier based on IQR",  col = "lightblue", border = "darkblue" -->
+<!--   ) -->
+
+
+
+<!-- } -->
+
+
+<!-- ``` -->
+
+```{r , echo=FALSE, results='asis', fig.width=6, fig.height=5}
+# 筛选异常值数据
+l_outlier <- Stat_Outlier[sapply(Stat_Outlier, function(x) x$iqr_indicator == TRUE)]
+
+# 循环渲染每个字段
+for(i in seq_along(l_outlier)){
+  # 提取数据
+  df <- l_outlier[[i]]$iqr_df        
+  field <- l_outlier[[i]]$DataField 
+  
+  # 输出标题
+  cat(htmltools::h3(field) %>% as.character())
+  
+# 核心：分栏布局（左表右图，等高+滚动条）
+cat('<div style="display: flex; gap: 20px; align-items: stretch; width: 100%;">')
+
+# 左侧：带滚动条的数据表格（与右侧等高）
+cat('<div style="flex: 1; overflow-y: auto; max-height: 300px; border: 1px solid #eee; padding: 10px;">')
+cat("<strong>Abormal Data：</strong><br>")
+print(knitr::kable(df %>% dplyr::filter(iqr_outlier == TRUE), format = "html", table.attr = 'style="width:100%;"'))
+cat('</div>')
+
+# 右侧：箱线图（与左侧等高）
+cat('<div style="flex: 1; max-height: 450px; display: flex; align-items: center; justify-content: center;">')
+boxplot(
+  x = df[[3]],  
+  main = "Outlier based on IQR",  
+  col = "lightblue", 
+  border = "darkblue"
+)
+cat('</div>')  
+
+# 关闭分栏
+cat('</div><br><hr><br>')
+}
+
+

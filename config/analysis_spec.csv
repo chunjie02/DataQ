@@ -1,3 +1,5 @@
-CRF,DataField,DataType,Missing,Outlier,Digit,Variant,
-"rawplus_dm",age_nsv,Num,Y,Y,Y,
-"rawplus_dm",sex,Chr,Y,null,null,null,
+CRF,DataField,DataType,Missing,Outlier,Digit,Variant
+rawplus_dm,age_nsv,Num,Y,Y,Y,Y
+rawplus_dm,sex,Chr,Y,,,
+rawplus_dm,timeontreatment,Num,Y,Y,Y,Y
+rawplus_dm,timeonstudy,Num,Y,Y,Y,Y
