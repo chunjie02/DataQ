@@ -1,5 +1,6 @@
-source("R/env.R")
+source("env.R")
 env <- load_env()
+
 
 # Inspect the pipeline
 tar_manifest(fields = all_of("command"))
@@ -17,6 +18,7 @@ tar_load(ImportData)
 
 tar_make(Stat_Outlier)
 tar_load(Stat_Outlier)
+
 
 tar_make(Reporting)
 

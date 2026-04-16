@@ -6,8 +6,8 @@ tar_source("R")
 tar_option_set(packages = c("dplyr"))
 
 list(
-  tar_target(Config, load_config()),
-  tar_target(ImportData, get_clindata_raw(Config)),
+  tar_target(Config, load_config("analysis_spec.csv")),
+  tar_target(ImportData, get_edc_data(Config = Config, subjid_col = "subjid", siteid_col = "siteid")),
   tar_target(Stat_Outlier,  outlier (ImportData)),
   # tar_target(Stat_Missing,  missing (ImportData)),
   # tar_target(Stat_Digit,    digit (ImportData)),
