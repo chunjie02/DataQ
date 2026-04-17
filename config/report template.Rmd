@@ -15,10 +15,13 @@ params:
 ## Summary
 ```{r , echo=FALSE, results='asis'}
 
+Stat_Outlier <- params$Stat_Outlier
 N <- length(Stat_Outlier)
-Detected <- Stat_Outlier %>%
-    purrr::keep(~ !is.null(.x[["iqr_outlier"]][["iqr_indicator"]]) && 
-                  .x[["iqr_outlier"]][["iqr_indicator"]] == TRUE)
+Detected <- purrr::keep(
+  Stat_Outlier,
+  ~ !is.null(.x[["iqr_outlier"]][["iqr_indicator"]]) &&
+    .x[["iqr_outlier"]][["iqr_indicator"]] == TRUE
+)
 n <- length(Detected)
 
 summary <- dplyr::tibble(
@@ -26,35 +29,41 @@ summary <- dplyr::tibble(
     Value   = c(N, n)
     ) 
 
-summary %>% gt::gt()  %>% gt::tab_options(
-      column_labels.hidden = TRUE
-    )
+summary_gt <- gt::gt(summary)
+gt::tab_options(summary_gt, column_labels.hidden = TRUE)
 
 ```
 ## Explore Outlier 
 
 
 ```{r , echo=FALSE, results='asis'}
+# Box-plot
+lBox <- list ()
 
-item <- Detected [[1]]
-print (htmltools::h3(item$DataField) )
+for (i in seq_along(Detected) ){
+  item <- Detected[[i]]
+  lBox [[i]] <- htmltools::tagList(
+    htmltools::h3(item$DataField),
+    htmltools::tags$div(
+      id = paste0("boxplot-", item$DataField),
+      style = "display:flex; gap:16px; align-items:flex-start;",
+      htmltools::tags$div(
+        style = "flex:1; overflow:auto; max-height:340px; border:1px solid #ddd; padding:1px;",
+        htmltools::HTML(gt::as_raw_html(gt::gt(item[["iqr_outlier"]][["iqr_df_ab"]])))
+      ),
+      htmltools::tags$div(
+        style = "flex:1; border:none; padding:0 !important; margin:0 !important;",
+        htmltools::plotTag({
+          graphics::bxp(item[["iqr_outlier"]][["plot"]], main = "Outlier based on IQR")
+        }, alt = "")
+      )
+    )
+  )
+}
+
+do.call(htmltools::tagList, lBox)
+
 
 ```
- 
-      
-::: {style="display: flex; gap: 20px; align-items: stretch; width: 100%;"}
 
-:::{style="flex: 1; overflow-y: auto; max-height: 300px; border: 1px solid #eee;"}
-  `r  item$iqr_outlier$iqr_df_ab %>% gt::gt()` 
-:::
   
-:::{style="flex: 1; max-height: 450px; display: flex; align-items: center; justify-content: center;"}
-```{r , echo=FALSE, results='asis'}
-  `r boxplot(x = item$Data[[3]],  main = "Outlier based on IQR", col = "lightblue", border = "darkblue")`
-```    
-:::
-        
-:::
-  
-
-

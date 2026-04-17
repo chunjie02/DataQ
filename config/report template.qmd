@@ -1,0 +1,65 @@
+---
+title: "Data Quality Check Report"
+format: html
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+params: 
+  Stat_Outlier: NA
+
+---
+  
+## Summary
+```{r , echo=FALSE, results='asis'}
+
+N <- length(Stat_Outlier)
+Detected <- Stat_Outlier %>%
+    purrr::keep(~ !is.null(.x[["iqr_outlier"]][["iqr_indicator"]]) && 
+                  .x[["iqr_outlier"]][["iqr_indicator"]] == TRUE)
+n <- length(Detected)
+
+summary <- dplyr::tibble(
+    Params     = c("Number of variable have been checked", "Variable has outlier detected" ),
+    Value   = c(N, n)
+    ) 
+
+summary %>% gt::gt()  %>% gt::tab_options(
+      column_labels.hidden = TRUE
+    )
+
+```
+## Explore Outlier 
+
+
+```{r , echo=FALSE, results='asis'}
+# Box-plot
+
+Detected %>% purrr::iwalk(function(item, i) {  
+  
+  print(htmltools::h3(item$DataField))
+  
+  print(
+    htmltools::tags$div( id= paste0("boxplot-", item$DataField),
+          style = "display:flex; gap:16px; align-items:flex-start;",
+        htmltools::tags$div(
+                style = "flex:1; overflow:auto; max-height:350px; border:1px solid #ddd; padding:1px;",
+                item[["iqr_outlier"]][["iqr_df_ab"]] %>% gt::gt()
+              ),
+        htmltools::tags$div(
+                style = "flex:1; border:none; padding:0 !important; margin:0 !important;",
+                htmltools::plotTag(graphics::bxp(item[["iqr_outlier"]][["plot"]], main = "Outlier based on IQR"),alt="")
+              )
+    )
+  )
+})
+
+
+
+```
+
+  
+
+

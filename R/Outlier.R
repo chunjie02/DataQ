@@ -1,3 +1,8 @@
+ # df <- dplyr::tibble(
+ #    age  = rnorm(100, 30, 10)
+ #    )
+ #  var = "age"
+
 
 Outlier_IQR <- function(df, var){
   
@@ -17,45 +22,20 @@ Outlier_IQR <- function(df, var){
         TRUE ~ FALSE
       )
     )
+
   iqr_df_ab <- iqr_df %>% dplyr::filter (iqr_outlier == TRUE)  
   
   iqr_indicator <- any(iqr_df$iqr_outlier, na.rm = TRUE)
   
-
-  p<-  ggplot2::ggplot(df, ggplot2::aes(y = .data[[var]])) +
-    ggplot2::geom_boxplot(
-      fill = "lightblue",       
-      color = "darkblue",        
-      outlier.color = "darkblue",
-      outlier.fill = "white", 
-      outlier.shape = 21,        
-      linetype = "solid",  
-      staplewidth = 0.8    
-    ) +
-    ggplot2::labs(
-      title = "Outlier based on IQR",
-      x = "",  
-      y = ""   
-    ) +
-    ggplot2::theme_minimal() +
-    ggplot2::theme(
-      plot.title  = ggplot2::element_text(hjust = 0.5, size = 20, face = "bold"), # 标题居中放大
-      axis.text.y = ggplot2::element_text(size = 18), 
-      axis.text.x = ggplot2::element_blank(), 
-      panel.grid  = ggplot2::element_blank(),   
-      panel.border = ggplot2::element_rect(
-        color = "black",   
-        fill = NA,          
-        linewidth = 1       
-      )
-    )
+  bp<- graphics::boxplot(df[[var]], range = 1.5, na.rm = TRUE, main = "Outlier based on IQR", plot = FALSE)
+# graphics::boxplot(df[[var]], range = 1.5, na.rm = TRUE, main = "Outlier based on IQR")
+# plot<- graphics::bxp(bp)
   
-   comb<- list (
-          iqr_df = iqr_df,
-          iqr_df_ab= iqr_df_ab,
-          iqr_indicator =iqr_indicator,
-          plot = p
-                  )
+  comb<- list (
+    iqr_indicator =iqr_indicator,
+    iqr_df_ab = iqr_df_ab,
+    plot = bp
+  )
   
   
   return(comb)

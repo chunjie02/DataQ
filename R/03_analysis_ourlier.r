@@ -41,13 +41,16 @@ outlier <- function(ImportData) {
 
   Out_list <- filtered_list %>%
     purrr::imap(function(item, i) {  
-    
       
-      item$iqr_outlier <- Outlier_IQR(item$Data, item$DataField)
-      
-      return(item)
+      item_out <- list(CRF = item$CRF, DataField = item$DataField)
+      item_out$iqr_outlier <- Outlier_IQR(item$Data, item$DataField)
+  
+      return(item_out)
     })
 
     
     return(Out_list)
 }
+
+
+

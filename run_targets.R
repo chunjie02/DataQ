@@ -19,7 +19,7 @@ tar_load(ImportData)
 tar_make(Stat_Outlier)
 tar_load(Stat_Outlier)
 
-
+tar_invalidate(everything()) 
 tar_make(Reporting)
 
 ## check dependencies
